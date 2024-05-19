@@ -19,7 +19,7 @@ class ForgotPasswordPage(BasePage):
         self.send_keys(Locators.EMAIL_INPUT, email)
 
     def click_send_email_button(self):
-        self.scroll_to_bottom()
+        self.scroll_to_element(Locators.SEND_EMAIL_BUTTON, EC.visibility_of_element_located)
         self.click_element(Locators.SEND_EMAIL_BUTTON)
 
     @property

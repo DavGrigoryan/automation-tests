@@ -1,6 +1,8 @@
 import pytest
 from selenium import webdriver
 from dotenv import load_dotenv
+from selenium.webdriver.chrome.options import Options
+from decouple import config
 
 # Load environment variables from .env file
 load_dotenv()
@@ -8,7 +10,15 @@ load_dotenv()
 
 @pytest.fixture(scope="session")
 def browser():
-    chrome_browser = webdriver.Chrome()
+    app_env = config("APP_ENV")
+
+    if app_env == "local":
+        chrome_browser = webdriver.Chrome()
+    else:
+        options = Options()
+        options.add_argument('--headless')
+        chrome_browser = webdriver.Chrome(options=options)
+
     chrome_browser.implicitly_wait(10)
     chrome_browser.maximize_window()
 
