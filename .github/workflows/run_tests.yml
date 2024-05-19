@@ -10,7 +10,8 @@ on:
         type: choice
         options:
           - All tests
-          - Authentications test
+          - Authentications tests
+          - Courses tests
 
 jobs:
   test:
@@ -45,5 +46,9 @@ jobs:
         run: pytest
 
       - name: Run authentications tests
-        if: ${{ github.event.inputs.deployment_target == 'Authentications test' }}
-        run: pytest tests/auth/test_forgot_password.py
+        if: ${{ github.event.inputs.deployment_target == 'Authentications tests' }}
+        run: pytest tests/auth/
+
+      - name: Run courses tests
+        if: ${{ github.event.inputs.deployment_target == 'Courses tests' }}
+        run: pytest tests/courses/
