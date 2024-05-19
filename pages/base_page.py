@@ -1,6 +1,6 @@
 import os
 import importlib.util
-from decouple import config
+from src.env import config
 from selenium.webdriver.common.action_chains import ActionChains
 
 from selenium.webdriver.support.wait import WebDriverWait

@@ -2,7 +2,7 @@ import pytest
 from selenium import webdriver
 from dotenv import load_dotenv
 from selenium.webdriver.chrome.options import Options
-from decouple import config
+from src.env import config
 
 # Load environment variables from .env file
 load_dotenv()
