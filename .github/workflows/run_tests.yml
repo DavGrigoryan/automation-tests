@@ -6,15 +6,24 @@ on:
       deployment_target:
         description: Choose target
         required: true
-        default: all_test
+        default: All tests
         type: choice
         options:
-          - all_test
-          - authentications_test
+          - All tests
+          - Authentications test
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    env: # Define environment variables at the job level
+      APP_ENV: ${{ secrets.APP_ENV }}
+      APP_URL: ${{ secrets.APP_URL }}
+      SUBDOMAIN: ${{ secrets.SUBDOMAIN }}
+      ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+      NOT_REAL_EMAIL: ${{ secrets.NOT_REAL_EMAIL }}
+      NOT_REAL_PASSWORD: ${{ secrets.NOT_REAL_PASSWORD }}
 
     steps:
       - name: Checkout repository
@@ -26,15 +35,15 @@ jobs:
           python-version: '3.10'
 
       - name: Install Chrome
-        run: sudo apt-get install google-chrome-stable
+        run: sudo apt-get install -y google-chrome-stable
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
       - name: Run all tests
-        if: "github.event.inputs.deplpyment_target == 'all_test'"
+        if: ${{ github.event.inputs.deployment_target == 'All tests' }}
         run: pytest
 
       - name: Run authentications tests
-        if: "github.event.inputs.deplpyment_target == 'authentications_test'"
+        if: ${{ github.event.inputs.deployment_target == 'Authentications test' }}
         run: pytest tests/auth/test_forgot_password.py
