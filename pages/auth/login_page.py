@@ -1,4 +1,3 @@
-import lang.login as login_page_messages
 from pages.base_page import BasePage, route_app
 from locators.auth.login_page_locators import LoginPageLocators as Locators
 from selenium.webdriver.support import expected_conditions as EC
@@ -19,11 +18,6 @@ class LoginPage(BasePage):
 
     def enter_password(self, password):
         self.send_keys(Locators.PASSWORD_INPUT, password)
-
-    #
-    # def clear_email(self):
-    #     self.clear_input(Locators.EMAIL_INPUT)
-    #
 
     def click_login_button(self):
         self.click_element(Locators.SIGN_IN_BUTTON)
