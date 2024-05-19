@@ -1,0 +1,40 @@
+name: Automated tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      deployment_target:
+        description: Choose target
+        required: true
+        default: All test
+        type: choice
+        options:
+          - All test
+          - Authentications test
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Chrome
+        run: sudo apt-get install google-chrome-stable
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run all tests
+        if: "github.event.inputs.deplpyment_target == 'All test'"
+        run: pytest
+
+      - name: Run authentications tests
+        if: "github.event.inputs.deplpyment_target == 'authentications'"
+        run: pytest tests/auth/test_forgot_password.py
