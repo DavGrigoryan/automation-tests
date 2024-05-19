@@ -6,11 +6,11 @@ on:
       deployment_target:
         description: Choose target
         required: true
-        default: All test
+        default: all_test
         type: choice
         options:
-          - All test
-          - Authentications test
+          - all_test
+          - authentications_test
 
 jobs:
   test:
@@ -32,9 +32,9 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run all tests
-        if: "github.event.inputs.deplpyment_target == 'All test'"
+        if: "github.event.inputs.deplpyment_target == 'all_test'"
         run: pytest
 
       - name: Run authentications tests
-        if: "github.event.inputs.deplpyment_target == 'authentications'"
+        if: "github.event.inputs.deplpyment_target == 'authentications_test'"
         run: pytest tests/auth/test_forgot_password.py
