@@ -1,4 +1,5 @@
 from selenium.webdriver.common.by import By
+from pages.base_page import route_app
 
 
 class LoginPageLocators:
@@ -6,4 +7,4 @@ class LoginPageLocators:
     PASSWORD_INPUT = (By.NAME, "Pass")
     SIGN_IN_BUTTON = (By.CSS_SELECTOR, 'button.btn.btn-primary.w-100')
     ERROR_MESSAGE = (By.ID, "login-error-message")
-    IS_LOGGED_IN = (By.CSS_SELECTOR, "a[href='https://eleapdemo.eleapdev2.com/account/']")
+    IS_LOGGED_IN = (By.CSS_SELECTOR, 'a[href="' + route_app('account/') + '"]')

@@ -6,6 +6,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementClickInterceptedException
 
 
+# need check and remove helpers folder
 def route_app(url) -> str:
     return config('SUBDOMAIN') + '.' + config('APP_URL') + url
 
@@ -20,7 +21,6 @@ def load_module(module_name, module_path):
 
 class BasePage:
     def __init__(self, browser):
-        self.lang_module = None
         self.browser = browser
 
     def navigate_to(self, url):
