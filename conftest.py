@@ -23,7 +23,7 @@ def browser():
         options.add_argument('--headless')
         chrome_browser = webdriver.Chrome(options=options)
 
-    chrome_browser.implicitly_wait(10)
+    chrome_browser.implicitly_wait(0)
     chrome_browser.maximize_window()
 
     yield chrome_browser  # Provide the fixture value to the tests
