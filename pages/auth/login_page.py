@@ -19,6 +19,12 @@ class LoginPage(BasePage):
     def enter_password(self, password):
         self.send_keys(Locators.PASSWORD_INPUT, password)
 
+    def clear_email_input(self):
+        self.clear_input(Locators.EMAIL_INPUT)
+
+    def clear_password_input(self):
+        self.clear_input(Locators.PASSWORD_INPUT)
+
     def click_login_button(self):
         self.click_element(Locators.SIGN_IN_BUTTON)
 
@@ -34,4 +40,4 @@ class LoginPage(BasePage):
 
     @property
     def user_is_logged_in(self):
-        return self.is_element_found(Locators.IS_LOGGED_IN, EC.invisibility_of_element_located)
+        return self.is_element_found(Locators.IS_LOGGED_IN, EC.presence_of_element_located)
