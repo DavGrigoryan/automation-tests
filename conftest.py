@@ -32,7 +32,13 @@ def browser():
     chrome_browser.quit()
 
 
-@pytest.fixture(autouse=True)
-def clear_browser_cookies(browser): 
-    # Clear browser cookies before each test
+@pytest.fixture(scope="class", autouse=True)
+def clear_browser_cookies(request, browser):
+    # Clear browser cookies before each test class
     browser.delete_all_cookies()
+
+    def session_end():
+        # Optional teardown logic if needed
+        pass
+
+    request.addfinalizer(session_end)
