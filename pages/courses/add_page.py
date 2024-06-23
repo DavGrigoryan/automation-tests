@@ -2,7 +2,7 @@ from pages.base_page import BasePage, route_app
 from locators.auth.login_page_locators import LoginPageLocators
 from locators.courses.add_page_locators import AddPageLocators
 from selenium.webdriver.support import expected_conditions as EC
-from src.env import config
+from env import config
 
 
 class AddPage(BasePage):

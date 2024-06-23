@@ -1,6 +1,6 @@
 import pytest
 import lang.login as login_page_messages
-from src.env import config
+from env import config
 from pages.auth.forgot_password_page import ForgotPasswordPage
 
 
