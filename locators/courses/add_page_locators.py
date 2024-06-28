@@ -1,5 +1,5 @@
 from selenium.webdriver.common.by import By
-from pages.base_page import route_app
+from utilities.helpers import route_app
 
 
 class AddPageLocators:

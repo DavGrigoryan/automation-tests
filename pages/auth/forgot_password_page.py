@@ -1,4 +1,5 @@
-from pages.base_page import BasePage, route_app
+from pages.base_page import BasePage
+from utilities.helpers import route_app
 from locators.auth.forgot_password_page_locators import ForgotPasswordPageLocators as Locators
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -13,7 +14,6 @@ class ForgotPasswordPage(BasePage):
         self.navigate_to(route_app('login'))
         self.scroll_to_element(Locators.I_CANNOT_ACCESS_MY_ACCOUNT_LINK, EC.visibility_of_element_located)
         self.click_element(Locators.I_CANNOT_ACCESS_MY_ACCOUNT_LINK, EC.element_to_be_clickable)
-        # self.click_element(Locators.MINIMIZE_LINK_CSS)
 
     def enter_email(self, email):
         self.send_keys(Locators.EMAIL_INPUT, email)

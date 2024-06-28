@@ -1,11 +1,12 @@
 import pytest
-import lang.login as login_page_messages
-from env import config
+import lang.auth.login as login_page_messages
+from tests.base_test import BaseTest
+from utilities.config import config
 from pages.auth.forgot_password_page import ForgotPasswordPage
 
 
 @pytest.mark.usefixtures("browser")
-class TestForgotPassword:
+class TestForgotPassword(BaseTest):
 
     @pytest.fixture(scope="class")
     def setup_class(self, browser, request):

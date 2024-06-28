@@ -55,7 +55,19 @@ pytest -k {test_some_method}
 
 To see more running test details
 
+- `pytest -v -s`
 - `pytest -rP`
 - `pytest -k {test_some_method} -rP`
 
 ---
+
+### To run tests on Github
+The following steps are required:
+```
+
+1. Enter the repository
+2. Go to the "Actions" section
+3. Enter the "Automated tests" section
+4. Click on "Run workflow"
+5. Select the section of tests on which we want to run the tests and give run
+```

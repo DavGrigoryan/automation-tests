@@ -1,4 +1,5 @@
-from pages.base_page import BasePage, route_app
+from pages.base_page import BasePage
+from utilities.helpers import route_app
 from locators.auth.login_page_locators import LoginPageLocators as Locators
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -11,7 +12,6 @@ class LoginPage(BasePage):
 
     def open(self):
         self.navigate_to(route_app('login'))
-        # self.click_element(Locators.MINIMIZE_LINK_CSS)
 
     def enter_email(self, email):
         self.send_keys(Locators.EMAIL_INPUT, email)

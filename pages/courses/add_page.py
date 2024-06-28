@@ -1,8 +1,9 @@
-from pages.base_page import BasePage, route_app
+from pages.base_page import BasePage
+from utilities.helpers import route_app
 from locators.auth.login_page_locators import LoginPageLocators
 from locators.courses.add_page_locators import AddPageLocators
 from selenium.webdriver.support import expected_conditions as EC
-from env import config
+from utilities.config import config
 
 
 class AddPage(BasePage):
@@ -18,7 +19,6 @@ class AddPage(BasePage):
         self.click_login_button()
         self.click_courses_link()
         self.click_add_new_course_link()
-        # self.click_element(Locators.MINIMIZE_LINK_CSS)
 
     def enter_email(self, email):
         self.send_keys(LoginPageLocators.EMAIL_INPUT, email)
@@ -45,9 +45,7 @@ class AddPage(BasePage):
     @property
     def get_course_added_success_message(self):
         element = self.find_element(AddPageLocators.COURSE_ADDED_SUCCESS_MESSAGE, EC.visibility_of_element_located)
-
-        # Get the value of the style attribute
-        style_attribute = element.get_attribute("style")
+        style_attribute = element.get_attribute("style")  # Get the value of the style attribute
 
         # Check if "display: none;" is not present in the style attribute and return its text if true
         if "display: none;" not in style_attribute:

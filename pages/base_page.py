@@ -1,22 +1,6 @@
-import os
-import importlib.util
-from env import config
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
-
-
-# need check and remove helpers folder
-def route_app(url) -> str:
-    return config('SUBDOMAIN') + '.' + config('APP_URL') + url
-
-
-def load_module(module_name, module_path):
-    path = os.path.join(module_path, module_name)
-    spec = importlib.util.spec_from_file_location(module_name, path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
 
 
 class BasePage:
