@@ -17,20 +17,9 @@ class AddPage(BasePage):
         self.enter_email(config("ADMIN_EMAIL"))
         self.enter_password(config("ADMIN_PASSWORD"))
         self.click_login_button()
-        self.click_courses_link()
-        self.click_add_new_course_link()
-
-    def enter_email(self, email):
-        self.send_keys(LoginPageLocators.EMAIL_INPUT, email)
-
-    def enter_password(self, password):
-        self.send_keys(LoginPageLocators.PASSWORD_INPUT, password)
 
     def enter_course_name(self, name):
         self.send_keys(AddPageLocators.COURSE_NAME, name)
-
-    def click_login_button(self):
-        self.click_element(LoginPageLocators.SIGN_IN_BUTTON)
 
     def click_courses_link(self):
         self.click_element(AddPageLocators.COURSES_LINK, EC.element_to_be_clickable)

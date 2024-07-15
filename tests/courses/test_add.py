@@ -1,5 +1,5 @@
 import pytest
-import lang.courses.add as add_page_messages
+import lang_massages.en.courses.add as add_page_messages
 from pages.courses.add_page import AddPage
 from tests.base_test import BaseTest
 
@@ -11,12 +11,14 @@ class TestAdd(BaseTest):
     def setup_class(self, browser, request):
         self.add_page = AddPage(browser)
         self.add_page.open()
+        self.add_page.click_courses_link()
+        self.add_page.click_add_new_course_link()
         # Attach self.add_page to the class, so it can be accessed in test methods
         request.cls.add_page = self.add_page
 
     # Test case for successfully add course
     @pytest.mark.usefixtures("setup_class")
     def test_successfully_add_course(self):
-        self.add_page.enter_course_name(self.get_prefix('User_1'))
+        self.add_page.enter_course_name(self.get_prefix('Course_1'))
         self.add_page.click_save_button()
         assert self.add_page.get_course_added_success_message == add_page_messages.course_has_been_added

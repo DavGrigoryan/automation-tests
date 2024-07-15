@@ -13,20 +13,11 @@ class LoginPage(BasePage):
     def open(self):
         self.navigate_to(route_app('login'))
 
-    def enter_email(self, email):
-        self.send_keys(Locators.EMAIL_INPUT, email)
-
-    def enter_password(self, password):
-        self.send_keys(Locators.PASSWORD_INPUT, password)
-
     def clear_email_input(self):
         self.clear_input(Locators.EMAIL_INPUT)
 
     def clear_password_input(self):
         self.clear_input(Locators.PASSWORD_INPUT)
-
-    def click_login_button(self):
-        self.click_element(Locators.SIGN_IN_BUTTON)
 
     @property
     def get_error_message(self):

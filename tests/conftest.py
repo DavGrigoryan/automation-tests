@@ -3,6 +3,7 @@ from selenium import webdriver
 from dotenv import load_dotenv
 from selenium.webdriver.chrome.options import Options
 from utilities.config import config
+from utilities.logger import logger
 
 # Load environment variables from .env file
 load_dotenv()

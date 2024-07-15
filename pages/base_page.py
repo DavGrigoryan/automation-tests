@@ -1,6 +1,7 @@
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from locators.auth.login_page_locators import LoginPageLocators
 
 
 class BasePage:
@@ -58,3 +59,14 @@ class BasePage:
 
     def scroll_by_amount(self, x, y):
         self.browser.execute_script(f"window.scrollBy({x}, {y});")
+
+    # ---------- Custom basic functions ----------
+
+    def click_login_button(self):
+        self.click_element(LoginPageLocators.SIGN_IN_BUTTON)
+
+    def enter_email(self, email):
+        self.send_keys(LoginPageLocators.EMAIL_INPUT, email)
+
+    def enter_password(self, password):
+        self.send_keys(LoginPageLocators.PASSWORD_INPUT, password)
