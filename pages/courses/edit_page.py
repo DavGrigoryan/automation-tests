@@ -1,0 +1,61 @@
+import time
+
+from selenium.webdriver.common.by import By
+
+from pages.courses.base_course_page import BaseCoursePage
+from locators.courses.add_page_locators import AddPageLocators
+from locators.base_page_locators import BasePageLocators
+from selenium.webdriver.support import expected_conditions as EC
+
+from utilities.logger import logger
+
+
+class EditPage(BaseCoursePage):
+    """Page Object for the Add Course page"""
+
+    def __init__(self, browser):
+        super().__init__(browser)
+
+    def click_view_course(self):
+        table = self.find_element(AddPageLocators.COURSE_TABLE)
+        rows = table.find_elements(By.TAG_NAME, 'tr')
+
+        if len(rows) > 1:
+            # Locate the second row (index 1 because indexing starts from 0)
+            second_row = rows[1]
+
+            # Get all the cells (td elements) within the second row
+            cells = second_row.find_elements(By.TAG_NAME, 'td')
+
+            # Ensure there are at least two cells in the second row
+            if len(cells) > 1:
+                found_course = cells[0]
+                link = found_course.find_element(By.CSS_SELECTOR, 'a.es_automation_course_name')
+                link.click()
+
+    def click_dropdown_option(self, item_text):
+        # Locate and click the dropdown to open it
+        dropdown = self.find_element((By.CLASS_NAME, 'ui-dropdown-toggle'))
+        dropdown.click()
+
+        # Find the list item containing the provided text
+        item_li = dropdown.find_element(By.XPATH, f".//li[a[contains(text(), '{item_text}')]]")
+
+        # Click on the <a> element within the <li>
+        item_li.find_element(By.TAG_NAME, 'a').click()
+
+    def enter_delete_input(self, key):
+        self.send_keys(AddPageLocators.DELETE_VERIFY_FIELD, key, EC.visibility_of_element_located)
+
+    def click_delete_course_button(self):
+        self.click_element(AddPageLocators.DELETE_COURSE_BTN, EC.element_to_be_clickable)
+
+    @property
+    def get_course_deleted_success_message(self):
+        element = self.find_element(BasePageLocators.ALERT_SUCCESS_MESSAGE, EC.visibility_of_element_located)
+        style_attribute = element.get_attribute("style")  # Get the value of the style attribute
+
+        # Check if "display: none;" is not present in the style attribute and return its text if true
+        if "display: none;" not in style_attribute:
+            return element.text
+        return None
