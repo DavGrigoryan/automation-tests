@@ -4,13 +4,11 @@ from pages.courses.edit_page import EditPage
 from tests.base_test import BaseTest
 
 
-@pytest.mark.usefixtures("browser")
 class TestEdit(BaseTest):
 
     @pytest.fixture(scope="class")
     def setup_class(self, browser, request):
         self.edit_page = EditPage(browser)
-        self.edit_page.open()
         self.edit_page.click_courses_link()
         self.edit_page.click_view_course()
         # Attach self.edit_page to the class, so it can be accessed in test methods

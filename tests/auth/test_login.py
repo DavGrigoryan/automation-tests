@@ -5,7 +5,7 @@ from utilities.config import config
 from pages.auth.login_page import LoginPage
 
 
-@pytest.mark.usefixtures("browser")
+@pytest.mark.usefixtures("clear_browser_cookies")
 class TestLogin(BaseTest):
 
     @pytest.fixture(scope="class")

@@ -5,7 +5,7 @@ from utilities.config import config
 from pages.auth.forgot_password_page import ForgotPasswordPage
 
 
-@pytest.mark.usefixtures("browser")
+@pytest.mark.usefixtures("clear_browser_cookies")
 class TestForgotPassword(BaseTest):
 
     @pytest.fixture(scope="class")

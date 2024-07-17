@@ -1,7 +1,6 @@
 from pages.base_page import BasePage
 from utilities.helpers import route_app
-from locators.auth.login_page_locators import LoginPageLocators
-from locators.courses.add_page_locators import AddPageLocators
+from locators.base_page_locators import BasePageLocators
 from selenium.webdriver.support import expected_conditions as EC
 from utilities.config import config
 
@@ -19,4 +18,4 @@ class BaseCoursePage(BasePage):
         self.click_login_button()
 
     def click_courses_link(self):
-        self.click_element(AddPageLocators.COURSES_LINK, EC.element_to_be_clickable)
+        self.click_element(BasePageLocators.HEADER_MENU_COURSES_LINK, EC.element_to_be_clickable)

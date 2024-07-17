@@ -4,7 +4,7 @@ from pages.courses.add_page import AddPage
 from tests.base_test import BaseTest
 
 
-@pytest.mark.usefixtures("browser")
+@pytest.mark.usefixtures("clear_browser_cookies")
 class TestAdd(BaseTest):
 
     @pytest.fixture(scope="class")
