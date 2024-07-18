@@ -8,6 +8,9 @@ from utilities.logger import logger
 # Load environment variables from .env file
 load_dotenv()
 
+# This ensures the logger is configured once when the confTest is imported
+_ = logger
+
 
 @pytest.fixture(scope="session")
 def browser():
