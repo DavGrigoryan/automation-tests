@@ -38,3 +38,6 @@ class TestLogin(BaseTest):
         self.login_page.enter_password(config("ADMIN_PASSWORD"))
         self.login_page.click_login_button()
         assert self.login_page.user_is_logged_in is True
+
+    def test_me(self):
+        assert 1 == 2
