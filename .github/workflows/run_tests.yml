@@ -60,7 +60,7 @@ jobs:
             allure-results
           retention-days: 1
 
-  generate_report:
+  generate-report:
     runs-on: ubuntu-latest
     needs: test
     name: Generate Allure report
