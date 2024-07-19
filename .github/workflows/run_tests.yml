@@ -13,6 +13,11 @@ on:
           - Authentications tests
           - Courses tests
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
