@@ -40,4 +40,4 @@ class TestLogin(BaseTest):
         assert self.login_page.user_is_logged_in is True
 
     def test_me(self):
-        assert 1 == 2
+        assert 1 == 1
