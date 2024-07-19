@@ -3,4 +3,4 @@
 .idea
 __pycache__/
 .pytest_cache/
-reports/allure_results
+reports/allure-results
