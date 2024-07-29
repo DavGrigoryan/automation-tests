@@ -1,3 +1,4 @@
+import allure
 import pytest
 import lang_massages.en.courses.index as courses_page_messages
 from pages.courses.add_page import AddPage
@@ -21,4 +22,5 @@ class TestAdd(BaseTest):
     def test_successfully_add_course(self):
         self.add_page.enter_course_name(self.get_prefix('Course_1'))
         self.add_page.click_save_button()
-        assert self.add_page.get_course_added_success_message == courses_page_messages.course_has_been_added
+        with allure.step('Check if course has been added successfully'):
+            assert self.add_page.get_course_added_success_message == courses_page_messages.course_has_been_added

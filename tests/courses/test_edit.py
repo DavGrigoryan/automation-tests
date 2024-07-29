@@ -1,3 +1,4 @@
+import allure
 import pytest
 import lang_massages.en.courses.index as courses_page_messages
 from pages.courses.edit_page import EditPage
@@ -10,7 +11,7 @@ class TestEdit(BaseTest):
     def setup_class(self, browser, request):
         self.edit_page = EditPage(browser)
         self.edit_page.click_courses_link()
-        self.edit_page.click_view_course()
+        self.edit_page.click_first_course_in_table()
         # Attach self.edit_page to the class, so it can be accessed in test methods
         request.cls.edit_page = self.edit_page
 
@@ -20,4 +21,5 @@ class TestEdit(BaseTest):
         self.edit_page.click_dropdown_option('Delete')
         self.edit_page.enter_delete_input('DELETE')
         self.edit_page.click_delete_course_button()
-        assert self.edit_page.get_course_deleted_success_message == courses_page_messages.course_has_been_deleted
+        with allure.step('Check if course has been deleted successfully'):
+            assert self.edit_page.get_course_deleted_success_message == courses_page_messages.course_has_been_deleted

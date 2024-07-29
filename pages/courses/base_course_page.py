@@ -1,3 +1,4 @@
+import allure
 from pages.base_page import BasePage
 from utilities.helpers import route_app
 from locators.base_page_locators import BasePageLocators
@@ -12,10 +13,12 @@ class BaseCoursePage(BasePage):
         super().__init__(browser)
 
     def open(self):
-        self.navigate_to(route_app('login'))
-        self.enter_email(config("ADMIN_EMAIL"))
-        self.enter_password(config("ADMIN_PASSWORD"))
-        self.click_login_button()
+        with allure.step('Login and open courses page'):
+            self.navigate_to(route_app('login'))
+            self.enter_email(config("ADMIN_EMAIL"))
+            self.enter_password(config("ADMIN_PASSWORD"))
+            self.click_login_button()
 
     def click_courses_link(self):
-        self.click_element(BasePageLocators.HEADER_MENU_COURSES_LINK, EC.element_to_be_clickable)
+        with allure.step('Click header courses link'):
+            self.click_element(BasePageLocators.HEADER_MENU_COURSES_LINK, EC.element_to_be_clickable)

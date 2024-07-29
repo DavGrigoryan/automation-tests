@@ -1,3 +1,4 @@
+import allure
 import pytest
 import lang_massages.en.auth.login as login_page_messages
 from tests.base_test import BaseTest
@@ -19,7 +20,8 @@ class TestLogin(BaseTest):
     @pytest.mark.usefixtures("setup_class")
     def test_login_with_empty_fields(self):
         self.login_page.click_login_button()
-        assert self.login_page.get_error_message == login_page_messages.login_error
+        with allure.step('Check login error message'):
+            assert self.login_page.get_error_message == login_page_messages.login_error
 
     # TC0002 - Test login with invalid email and password
     @pytest.mark.usefixtures("setup_class")
@@ -27,7 +29,8 @@ class TestLogin(BaseTest):
         self.login_page.enter_email(config('NOT_REAL_EMAIL'))
         self.login_page.enter_password(config('NOT_REAL_PASSWORD'))
         self.login_page.click_login_button()
-        assert self.login_page.get_error_message == login_page_messages.login_error
+        with allure.step('Check login error message'):
+            assert self.login_page.get_error_message == login_page_messages.login_error
 
     # TC0003 - Test with a successful login
     @pytest.mark.usefixtures("setup_class")
@@ -38,6 +41,3 @@ class TestLogin(BaseTest):
         self.login_page.enter_password(config("ADMIN_PASSWORD"))
         self.login_page.click_login_button()
         assert self.login_page.user_is_logged_in is True
-
-    def test_me(self):
-        assert 1 == 1
