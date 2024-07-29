@@ -5,6 +5,7 @@ from pages.courses.edit_page import EditPage
 from tests.base_test import BaseTest
 
 
+@allure.feature('Courses tests')
 class TestEdit(BaseTest):
 
     @pytest.fixture(scope="class")
@@ -15,7 +16,7 @@ class TestEdit(BaseTest):
         # Attach self.edit_page to the class, so it can be accessed in test methods
         request.cls.edit_page = self.edit_page
 
-    # TC0012 - Test successfully delete Course
+    @allure.story('TC0012 - Test successfully delete Course')
     @pytest.mark.usefixtures("setup_class")
     def test_successfully_delete_course(self):
         self.edit_page.click_dropdown_option('Delete')

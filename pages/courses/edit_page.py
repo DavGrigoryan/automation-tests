@@ -5,6 +5,8 @@ from locators.courses.index_page_locators import IndexPageLocators
 from locators.base_page_locators import BasePageLocators
 from selenium.webdriver.support import expected_conditions as EC
 
+from utilities.logger import logger
+
 
 class EditPage(BaseCoursePage):
     """Page Object for the Edit Course page"""
@@ -15,32 +17,32 @@ class EditPage(BaseCoursePage):
     def click_first_course_in_table(self):
         with allure.step('Click first course in table'):
             table = self.find_element(IndexPageLocators.COURSE_TABLE)
-            rows = table.find_elements(By.TAG_NAME, 'tr')
+            rows = table.find_elements(*IndexPageLocators.COURSE_TABLE_ROWS)
 
             if len(rows) > 1:
                 # Locate the second row (index 1 because indexing starts from 0)
                 second_row = rows[1]
 
                 # Get all the cells (td elements) within the second row
-                cells = second_row.find_elements(By.TAG_NAME, 'td')
+                cells = second_row.find_elements(*IndexPageLocators.COURSE_TABLE_COLUMNS)
 
                 # Ensure there are at least two cells in the second row
                 if len(cells) > 1:
                     found_course = cells[0]
-                    link = found_course.find_element(By.CSS_SELECTOR, 'a.es_automation_course_name')
+                    link = found_course.find_element(*IndexPageLocators.COURSE_NAME_LINK)
                     link.click()
 
     def click_dropdown_option(self, item_text):
         with allure.step('Click dropdown option: ' + item_text):
             # Locate and click the dropdown to open it
-            dropdown = self.find_element((By.CLASS_NAME, 'ui-dropdown-toggle'))
+            dropdown = self.find_element(IndexPageLocators.DROPDOWN_TOGGLE)
             dropdown.click()
 
             # Find the list item containing the provided text
-            item_li = dropdown.find_element(By.XPATH, f".//li[a[contains(text(), '{item_text}')]]")
+            item_li = dropdown.find_element(*IndexPageLocators.dropdown_option(item_text))
 
             # Click on the <a> element within the <li>
-            item_li.find_element(By.TAG_NAME, 'a').click()
+            item_li.find_element(*IndexPageLocators.DROPDOWN_ITEMS).click()
 
     def enter_delete_input(self, key):
         with allure.step('Enter delete input: ' + key):

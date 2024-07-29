@@ -5,6 +5,7 @@ from pages.courses.add_page import AddPage
 from tests.base_test import BaseTest
 
 
+@allure.feature('Courses tests')
 @pytest.mark.usefixtures("clear_browser_cookies")
 class TestAdd(BaseTest):
 
@@ -17,7 +18,7 @@ class TestAdd(BaseTest):
         # Attach self.add_page to the class, so it can be accessed in test methods
         request.cls.add_page = self.add_page
 
-    # TC0006 - Test successfully add new Course
+    @allure.story('TC0006 - Test successfully add new Course')
     @pytest.mark.usefixtures("setup_class")
     def test_successfully_add_course(self):
         self.add_page.enter_course_name(self.get_prefix('Course_1'))
