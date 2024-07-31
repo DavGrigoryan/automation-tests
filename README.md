@@ -43,6 +43,12 @@ To see more running test details
 - `pytest -rP`
 - `pytest -k {test_some_method} -rP`
 
+### Running All Tests and generate ALLURE reports
+
+
+- **Generate allure reports:** `pytest --alluredir=allure-results`
+- **Running allure server: `allure serve`** 
+
 ---
 
 <h1 align="center">Running Tests via GitHub</h1>
