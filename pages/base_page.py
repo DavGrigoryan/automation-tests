@@ -1,7 +1,10 @@
+import allure
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from locators.auth.login_page_locators import LoginPageLocators
+from utilities.helpers import route_app
+from utilities.config import config
 
 
 class BasePage:
@@ -70,3 +73,10 @@ class BasePage:
 
     def enter_password(self, password):
         self.send_keys(LoginPageLocators.PASSWORD_INPUT, password)
+
+    def login_as_admin(self):
+        with allure.step('Navigate to login page and successfully login as admin'):
+            self.navigate_to(route_app('login'))
+            self.enter_email(config("ADMIN_EMAIL"))
+            self.enter_password(config("ADMIN_PASSWORD"))
+            self.click_login_button()

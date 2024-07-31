@@ -1,9 +1,7 @@
 import allure
 from pages.base_page import BasePage
-from utilities.helpers import route_app
 from locators.base_page_locators import BasePageLocators
 from selenium.webdriver.support import expected_conditions as EC
-from utilities.config import config
 
 
 class BaseCoursePage(BasePage):
@@ -13,11 +11,7 @@ class BaseCoursePage(BasePage):
         super().__init__(browser)
 
     def open(self):
-        with allure.step('Login and open courses page'):
-            self.navigate_to(route_app('login'))
-            self.enter_email(config("ADMIN_EMAIL"))
-            self.enter_password(config("ADMIN_PASSWORD"))
-            self.click_login_button()
+        self.login_as_admin()
 
     def click_courses_link(self):
         with allure.step('Click header courses link'):

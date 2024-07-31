@@ -7,7 +7,7 @@ from tests.base_test import BaseTest
 
 @allure.feature('Courses tests')
 @pytest.mark.usefixtures("clear_browser_cookies")
-class TestAdd(BaseTest):
+class TestAddNewCourse(BaseTest):
 
     @pytest.fixture(scope="class")
     def setup_class(self, browser, request):

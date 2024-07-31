@@ -6,7 +6,7 @@ from tests.base_test import BaseTest
 
 
 @allure.feature('Courses tests')
-class TestEdit(BaseTest):
+class TestEditCourse(BaseTest):
 
     @pytest.fixture(scope="class")
     def setup_class(self, browser, request):
