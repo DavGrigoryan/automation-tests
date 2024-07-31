@@ -105,7 +105,13 @@ logger.error('This is an error message')
 logger.critical('This is a critical message')
 ```
 ---
+### How install and configure virtual environment via VENV
 
+1. `sudo apt install python3-venv`
+2. `cd /var/www/eleap/automation-tests`
+3. `python3 -m venv venv`
+4. `source venv/bin/activate`
+5. `pip list`
 
-
+---
 
