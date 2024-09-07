@@ -19,9 +19,7 @@ def browser():
     The browser session will be used for the entire test session and
     will be closed after all tests have been executed.
     """
-    app_env = config("APP_ENV")
-
-    if app_env == "local":
+    if config('APP_ENV') == 'local':
         # Initialize Chrome WebDriver for local environment
         chrome_browser = webdriver.Chrome()
     else:

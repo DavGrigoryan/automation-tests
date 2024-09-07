@@ -11,6 +11,7 @@ on:
         options:
           - All tests
           - Authentications tests
+          - Users tests
           - Courses tests
 
 permissions:
@@ -21,7 +22,7 @@ permissions:
 jobs:
   download-history:
     runs-on: ubuntu-latest
-    name: Download history
+    name: Download old allure history
     steps:
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -31,29 +32,30 @@ jobs:
         id: fetch_allure_results
         run: |
           echo "Fetching allure-results artifact ID..."
-          response=$(curl -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/DavGrigoryan/automation-tests/actions/artifacts?name=allure-results")
+          response=$(curl -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ secrets.TOKEN }}" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/Telania-eLeaP/automation-tests/actions/artifacts?name=allure-results")
           echo "$response" > allure-results-response.json
-          ARTIFACT_ID=$(echo "$response" | python -c "import sys, json; data = json.load(sys.stdin); artifacts = data.get('artifacts', []); print(artifacts[0]['id'] if artifacts else '');")
+          ARTIFACT_ID=$(echo "$response" | python -c "import sys, json, datetime; data = json.load(sys.stdin); artifacts = data.get('artifacts', []); now = datetime.datetime.utcnow(); one_week_ago = now - datetime.timedelta(days=2); recent_artifacts = [a for a in artifacts if datetime.datetime.strptime(a['created_at'], '%Y-%m-%dT%H:%M:%SZ') > one_week_ago]; print(recent_artifacts[0]['id'] if recent_artifacts else '');")
           echo "ARTIFACT_ID=$ARTIFACT_ID" >> $GITHUB_ENV
       - name: Download allure-results artifact
         if: ${{ env.ARTIFACT_ID != '' }}
         run: |
           echo "Fetching allure-results artifact..."
-          curl -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ secrets.TOKEN }}" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/DavGrigoryan/automation-tests/actions/artifacts/${{ env.ARTIFACT_ID }}/zip" -o artifacts.zip || echo "No allure-results artifact to download."
+          curl -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ secrets.TOKEN }}" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/Telania-eLeaP/automation-tests/actions/artifacts/${{ env.ARTIFACT_ID }}/zip" -o artifacts.zip || echo "No allure-results artifact to download."
       - name: Fetch github-pages artifact ID
         id: fetch_github_pages
         run: |
           echo "Fetching github-pages artifact ID..."
-          response=$(curl -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/DavGrigoryan/automation-tests/actions/artifacts?name=github-pages")
+          response=$(curl -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ secrets.TOKEN }}" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/Telania-eLeaP/automation-tests/actions/artifacts?name=github-pages")
           echo "$response" > github-pages-response.json
-          REPORT_ID=$(echo "$response" | python -c "import sys, json; data = json.load(sys.stdin); artifacts = data.get('artifacts', []); print(artifacts[0]['id'] if artifacts else '');")
+          REPORT_ID=$(echo "$response" | python -c "import sys, json, datetime; data = json.load(sys.stdin); artifacts = data.get('artifacts', []); now = datetime.datetime.utcnow(); one_week_ago = now - datetime.timedelta(days=2); recent_artifacts = [a for a in artifacts if datetime.datetime.strptime(a['created_at'], '%Y-%m-%dT%H:%M:%SZ') > one_week_ago]; print(recent_artifacts[0]['id'] if recent_artifacts else '');")
           echo "REPORT_ID=$REPORT_ID" >> $GITHUB_ENV
       - name: Download github-pages artifact
         if: ${{ env.REPORT_ID != '' }}
         run: |
           echo "Fetching github-pages artifact..."
-          curl -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ secrets.TOKEN }}" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/DavGrigoryan/automation-tests/actions/artifacts/${{ env.REPORT_ID }}/zip" -o pages.zip || echo "No github-pages artifact to download."
+          curl -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ secrets.TOKEN }}" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/Telania-eLeaP/automation-tests/actions/artifacts/${{ env.REPORT_ID }}/zip" -o pages.zip || echo "No github-pages artifact to download."
       - name: Unzip allure-results
+        if: ${{ env.ARTIFACT_ID != '' }}
         run: |
           if [ -f artifacts.zip ]; then
             mkdir -p allure-results
@@ -77,16 +79,27 @@ jobs:
         with:
           name: allure-results
           path: allure-results
-          retention-days: 1
+          retention-days: 2
 
   test:
     runs-on: ubuntu-latest
+    name: Tests
     needs: download-history
 
     env: # Define environment variables at the job level
       APP_ENV: ${{ secrets.APP_ENV }}
       APP_URL: ${{ secrets.APP_URL }}
       SUBDOMAIN: ${{ secrets.SUBDOMAIN }}
+      DB_CONNECTION: ${{ secrets.DB_CONNECTION }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_DATABASE: ${{ secrets.DB_DATABASE }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+      SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
       NOT_REAL_EMAIL: ${{ secrets.NOT_REAL_EMAIL }}
@@ -112,6 +125,7 @@ jobs:
         with:
           name: allure-results
           path: allure-results
+        continue-on-error: true # Allow the step to continue even if the artifact is not found
 
       - name: Run all tests
         if: ${{ github.event.inputs.deployment_target == 'All tests' }}
@@ -121,6 +135,11 @@ jobs:
       - name: Run authentications tests
         if: ${{ github.event.inputs.deployment_target == 'Authentications tests' }}
         run: pytest tests/auth/ --alluredir=allure-results
+        continue-on-error: true
+
+      - name: Run users tests
+        if: ${{ github.event.inputs.deployment_target == 'Users tests' }}
+        run: pytest tests/users/ --alluredir=allure-results
         continue-on-error: true
 
       - name: Run courses tests
@@ -133,12 +152,12 @@ jobs:
         with:
           name: allure-results
           path: allure-results
-          retention-days: 1
+          retention-days: 2
 
   generate-report:
     runs-on: ubuntu-latest
     needs: test
-    name: Generate report
+    name: Generate allure report
     steps:
       - uses: actions/setup-java@v3
         with:
@@ -147,21 +166,18 @@ jobs:
       - run: sudo wget https://github.com/allure-framework/allure2/releases/download/2.23.1/allure-2.23.1.tgz && sudo tar -zxvf allure-2.23.1.tgz -C /opt/ && sudo ln -s /opt/allure-2.23.1/bin/allure /usr/bin/allure
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v3
-        with:
-          name: allure-results
-          path: allure-results
       - run: allure generate -c allure-results -o _site
       - name: Store generated report
         uses: actions/upload-artifact@v3
         with:
           name: _site
           path: _site
-          retention-days: 1
+          retention-days: 2
 
   publish-report:
     runs-on: ubuntu-latest
     needs: generate-report
-    name: Report publication
+    name: Allure report publication
     steps:
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v3

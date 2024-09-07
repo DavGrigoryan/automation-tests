@@ -14,17 +14,16 @@ class TestLogin(BaseTest):
     def setup_class(self, browser, request):
         self.login_page = LoginPage(browser)
         self.login_page.open()
-        # Attach self.login_page to the class, so it can be accessed in test methods
         request.cls.login_page = self.login_page
 
-    @allure.story('TC0001 - Test login with empty fields')
+    @allure.story('TC0001: Test login with empty fields')
     @pytest.mark.usefixtures("setup_class")
     def test_login_with_empty_fields(self):
         self.login_page.click_login_button()
         with allure.step('Check login error message'):
             assert self.login_page.get_error_message == login_page_messages.login_error
 
-    @allure.story('TC0002 - Test login with invalid email and password')
+    @allure.story('TC0002: Test login with invalid email and password')
     @pytest.mark.usefixtures("setup_class")
     def test_login_with_invalid_email_and_password(self):
         self.login_page.enter_email(config('NOT_REAL_EMAIL'))
@@ -33,7 +32,7 @@ class TestLogin(BaseTest):
         with allure.step('Check login error message'):
             assert self.login_page.get_error_message == login_page_messages.login_error
 
-    @allure.story('TC0003 - Test with a successful login')
+    @allure.story('TC0003: Test with a successful login')
     @pytest.mark.usefixtures("setup_class")
     def test_with_a_successful_login(self):
         self.login_page.clear_email_input()

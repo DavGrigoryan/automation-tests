@@ -10,16 +10,24 @@ class AddPage(BaseUserPage):
         super().__init__(browser)
 
     def click_add_new_user_link(self):
-        with allure.step('Click add new course link'):
+        with allure.step('Click add new user link'):
             self.click_element(IndexPageLocators.ADD_NEW_USER_LINK, EC.element_to_be_clickable)
 
-    def enter_user_last_name(self, name):
-        with allure.step('Enter user last name'):
-            self.send_keys(IndexPageLocators.USER_LAST_NAME, name, EC.visibility_of_element_located)
+    def select_user_title(self, title):
+        with allure.step('Select user title'):
+            self.select_option(
+                IndexPageLocators.USER_TITLE,
+                option_value=title,
+                condition=EC.visibility_of_element_located
+            )
 
-    def enter_user_email(self, email):
-        with allure.step('Enter user email'):
-            self.send_keys(IndexPageLocators.USER_EMAIL, email, EC.visibility_of_element_located)
+    def select_user_access_level(self, access_level):
+        with allure.step('Select user access level'):
+            self.select_option(
+                IndexPageLocators.USER_ACCESS_LEVEL,
+                option_text=access_level,
+                condition=EC.visibility_of_element_located
+            )
 
     def click_add_user_button(self):
         with allure.step('Click add user button'):
@@ -30,4 +38,10 @@ class AddPage(BaseUserPage):
     def get_user_added_error_message(self):
         with allure.step('Get user added error message'):
             element = self.find_element(BasePageLocators.ALERT_DANGER_MESSAGE, EC.visibility_of_element_located)
+            return element.text
+
+    @property
+    def get_user_added_success_message(self):
+        with allure.step('Get user added success message'):
+            element = self.find_element(BasePageLocators.ALERT_SUCCESS_MESSAGE, EC.visibility_of_element_located)
             return element.text

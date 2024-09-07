@@ -1,13 +1,11 @@
 import allure
-from pages.base_page import BasePage
+from pages.custom_base_page import CustomBasePage
 from utilities.helpers import route_app
 from locators.auth.login_page_locators import LoginPageLocators as Locators
 from selenium.webdriver.support import expected_conditions as EC
 
 
-class LoginPage(BasePage):
-    """Page Object for the Login page"""
-
+class LoginPage(CustomBasePage):
     def __init__(self, browser):
         super().__init__(browser)
 

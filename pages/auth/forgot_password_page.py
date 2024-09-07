@@ -6,8 +6,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class ForgotPasswordPage(BasePage):
-    """Page Object for the Forgot Password page"""
-
     def __init__(self, browser):
         super().__init__(browser)
 

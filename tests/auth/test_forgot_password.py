@@ -14,17 +14,16 @@ class TestForgotPassword(BaseTest):
     def setup_class(self, browser, request):
         self.forgot_password_page = ForgotPasswordPage(browser)
         self.forgot_password_page.open()
-        # Attach self.forgot_password_page to the class, so it can be accessed in test methods
         request.cls.forgot_password_page = self.forgot_password_page
 
-    @allure.story('TC0004 - Test with empty fields when clicking "I can\'t access my account"')
+    @allure.story('TC0004: Test with empty fields when clicking "I can\'t access my account"')
     @pytest.mark.usefixtures("setup_class")
     def test_error_massage_with_empty_fields(self):
         self.forgot_password_page.click_send_email_button()
         with allure.step('Check incomplete email error message'):
             assert self.forgot_password_page.get_error_message == login_page_messages.incomplete_email_error
 
-    @allure.story('TC0005 - Test with a not registered email when clicking "I can\'t access my account"')
+    @allure.story('TC0005: Test with a not registered email when clicking "I can\'t access my account"')
     @pytest.mark.usefixtures("setup_class")
     def test_error_message_with_not_registered_user(self):
         self.forgot_password_page.enter_email(config('NOT_REAL_EMAIL'))

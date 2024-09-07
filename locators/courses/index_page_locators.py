@@ -9,8 +9,6 @@ class IndexPageLocators:
     COURSE_TABLE = (By.ID, 'es_automation_courses-table')
     DELETE_COURSE_BTN = (By.CLASS_NAME, 'delete_course_btn')
     DELETE_VERIFY_FIELD = (By.CLASS_NAME, "delete_verify_field")
-    COURSE_TABLE_ROWS = (By.TAG_NAME, 'tr')
-    COURSE_TABLE_COLUMNS = (By.TAG_NAME, 'td')
     COURSE_NAME_LINK = (By.CSS_SELECTOR, 'a.es_automation_course_name')
     DROPDOWN_TOGGLE = (By.CLASS_NAME, 'ui-dropdown-toggle')
     DROPDOWN_ITEMS = (By.TAG_NAME, 'a')

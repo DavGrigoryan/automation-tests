@@ -1,10 +1,7 @@
 import allure
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from locators.auth.login_page_locators import LoginPageLocators
-from utilities.helpers import route_app
-from utilities.config import config
 
 
 class BasePage:
@@ -14,69 +11,110 @@ class BasePage:
     def navigate_to(self, url):
         self.browser.get(url)
 
-    def find_element(self, locator, condition=None, timeout=5):
-        if condition is not None:
-            wait = WebDriverWait(self.browser, timeout)
-            return wait.until(condition(locator))
-        else:
-            return self.browser.find_element(*locator)
+    def find_element(self, locator, condition=None, timeout: int = 10):
+        try:
+            if condition is not None:
+                wait = WebDriverWait(self.browser, timeout)
+                return wait.until(condition(locator))
+            else:
+                return self.browser.find_element(*locator)
+        except TimeoutException:
+            raise TimeoutException(f"Element with locator {locator} not found within {timeout} seconds.")
 
-    def find_elements(self, locator, condition=None, timeout=5):
+    def find_elements(self, locator, condition=None, timeout: int = 10):
         if condition is not None:
             wait = WebDriverWait(self.browser, timeout)
             return wait.until(condition(locator))
         else:
             return self.browser.find_elements(*locator)
 
-    def is_element_found(self, locator, condition=None, timeout=5):
+    def find_child_element(self, parent_element, locator, condition=None, timeout: int = 10):
+        try:
+            if condition is not None:
+                wait = WebDriverWait(self.browser, timeout)
+                return wait.until(lambda driver: condition(parent_element.find_element(*locator)))
+            else:
+                return parent_element.find_element(*locator)
+        except TimeoutException:
+            raise TimeoutException(f"Child element with locator {locator} not found within {timeout} seconds.")
+
+    def find_child_elements(self, parent_element, locator, condition=None, timeout: int = 10):
+        try:
+            if condition is not None:
+                wait = WebDriverWait(self.browser, timeout)
+                return wait.until(lambda driver: condition(parent_element.find_elements(*locator)))
+            else:
+                return parent_element.find_elements(*locator)
+        except TimeoutException:
+            raise TimeoutException(f"Child element with locator {locator} not found within {timeout} seconds.")
+
+    def is_element_found(self, locator, condition=None, timeout: int = 10):
         try:
             self.find_element(locator, condition, timeout)
             return True
         except (NoSuchElementException, TimeoutException):
             return False
 
-    def send_keys(self, locator, keys, condition=None, timeout=5):
+    def send_keys(self, locator, keys, condition=None, timeout: int = 10):
         self.find_element(locator, condition, timeout).send_keys(keys)
 
-    def click_element(self, locator, condition=None, timeout=5):
+    def click_element(self, locator, condition=None, timeout: int = 10):
         self.find_element(locator, condition, timeout).click()
 
-    def clear_input(self, locator, condition=None, timeout=5):
+    def clear_input(self, locator, condition=None, timeout: int = 10):
         self.find_element(locator, condition, timeout).clear()
 
-    def wait_for_condition(self, locator, condition, timeout=5):
+    def select_option(self, locator, option_value=None, option_text=None, option_index=None,
+                      condition=None, timeout: int = 10):
+        dropdown_element = self.find_element(locator, condition, timeout)
+        select = Select(dropdown_element)
+
+        if option_value is not None:
+            select.select_by_value(option_value)
+        elif option_text is not None:
+            select.select_by_visible_text(option_text)
+        elif option_index is not None:
+            select.select_by_index(option_index)
+
+    def wait_for_condition(self, locator, condition, timeout: int = 10):
         wait = WebDriverWait(self.browser, timeout)
         return wait.until(lambda driver: condition(self.find_element(locator)))
 
-    def wait_for_element(self, locator, condition, timeout=5):
+    def wait_for_dom_to_load(self, timeout=10):
+        WebDriverWait(self.browser, timeout).until(
+            lambda d: d.execute_script("return document.readyState") == "complete"
+        )
+
+    def wait_for_element(self, locator, condition, timeout: int = 10):
         wait = WebDriverWait(self.browser, timeout)
         return wait.until(condition(locator))
 
-    def scroll_to_bottom(self):
+    def scroll_to_bottom(self, timeout: int = 10):
         self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
-    def scroll_to_element(self, locator, condition=None, timeout=5):
+        # Wait until the page is fully scrolled to the bottom
+        WebDriverWait(self.browser, timeout).until(
+            lambda driver: driver.execute_script("return window.innerHeight + window.scrollY >= "
+                                                 "document.body.scrollHeight")
+        )
+
+    def scroll_to_element(self, locator, condition=None, timeout: int = 10):
         element = self.find_element(locator, condition, timeout)
         actions = ActionChains(self.browser)
         actions.move_to_element(element).perform()  # Scroll to the element
 
-    def scroll_by_amount(self, x, y):
+    def scroll_by_amount(self, x: int, y: int):
         self.browser.execute_script(f"window.scrollBy({x}, {y});")
 
-    # ---------- Custom basic functions ----------
+    def refresh_page(self):
+        self.browser.refresh()
 
-    def click_login_button(self):
-        self.click_element(LoginPageLocators.SIGN_IN_BUTTON)
-
-    def enter_email(self, email):
-        self.send_keys(LoginPageLocators.EMAIL_INPUT, email)
-
-    def enter_password(self, password):
-        self.send_keys(LoginPageLocators.PASSWORD_INPUT, password)
-
-    def login_as_admin(self):
-        with allure.step('Navigate to login page and successfully login as admin'):
-            self.navigate_to(route_app('login'))
-            self.enter_email(config("ADMIN_EMAIL"))
-            self.enter_password(config("ADMIN_PASSWORD"))
-            self.click_login_button()
+    def alert_handler(self, action: str):
+        with allure.step(f'{action.capitalize()} the alert'):
+            alert = self.browser.switch_to.alert
+            if action == 'accept':
+                alert.accept()
+            elif action == 'dismiss':
+                alert.dismiss()
+            else:
+                raise ValueError("Invalid action. Use 'accept' or 'dismiss'.")
